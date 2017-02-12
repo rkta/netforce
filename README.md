@@ -13,11 +13,11 @@ force system.
 
 ## What it needs
 netforce.py uses the following imports:
-    - sys
-    - os
-    - re
-    - math
-    - matplotlib
+- sys
+- os
+- re
+- math
+- matplotlib
 
 
 ## Why it exists
