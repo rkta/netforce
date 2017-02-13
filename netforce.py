@@ -3,6 +3,10 @@
 
 # Todo:
 # remove multiple values
+#   - create function
+#   - user enters indices separeted by space
+#   - split list, check if .isdigit()
+#   - remove indices
 
 import sys
 import os
@@ -100,7 +104,7 @@ def getNetForce():
         netforce[Fry] += valuesList[i][Fy]
 
     netforce[Fr] = math.sqrt(netforce[Frx] ** 2 + netforce[Fry] ** 2)
-    netforce[netRadians] = math.atan(netforce[Fry] / netforce[Frx])
+    netforce[netRadians] = math.atan2(netforce[Fry], netforce[Frx])
     netforce[netDegrees] = math.degrees(netforce[netRadians])
 
     return netforce
