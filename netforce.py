@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 # calculate net force
-# Resultierende berechnen
 
-# TODO
-# Change data structure
-#   put all var in one dict/list?
+# Todo:
+# remove multiple values
 
 import sys
 import os
@@ -35,8 +33,8 @@ netDegrees = 4
 def resetAllValues():
     valuesList = []
     netforceList = []
-    calc = False
-    return valuesList, netforceList, calc
+    isCalculated = False
+    return valuesList, netforceList, isCalculated
 
 
 
@@ -104,7 +102,7 @@ def getNetForce():
     netforce[Fr] = math.sqrt(netforce[Frx] ** 2 + netforce[Fry] ** 2)
     netforce[netRadians] = math.atan(netforce[Fry] / netforce[Frx])
     netforce[netDegrees] = math.degrees(netforce[netRadians])
-    
+
     return netforce
 
 
@@ -137,7 +135,7 @@ def outputResults(halt = True):
                         float(valuesList[i][degrees])))
                  )
 
-    if calc:
+    if isCalculated:
             print('\n')
             print('net force:\t\t%8.3f' % netforceList[Fr])
             print('radians:\t\t%8.3f' % netforceList[netRadians])
@@ -163,14 +161,12 @@ def plot():
     plt.legend()
     plt.show()
 
-def removeValues():
-    pass
 
 
 print('Calculate the net force')
 
 # Populate all Variables
-valuesList, netforceList, calc = resetAllValues()
+valuesList, netforceList, isCalculated = resetAllValues()
 
 # For testing only, don't ship
 valuesList = [[15.8, 82, math.radians(82)], [23.4, 175, math.radians(175)], [12.5, 270, math.radians(270)], [28.75, 340, math.radians(340)]]
@@ -206,14 +202,14 @@ while True:
 
     if choice.isdigit():
         valuesList.extend(getInput(choice))
-        calc = False
+        isCalculated = False
     elif choice == 'calc' or choice.lower() == 'c':
         for i in range(len(valuesList)):
             if len(valuesList[i]) == 3:
                 valuesList[i].extend(calculate(valuesList[i][F],\
                         valuesList[i][radians]))
         netforceList = getNetForce()
-        calc = True
+        isCalculated = True
         outputResults()
     elif choice == 'print' or choice.lower() == 'p':
         outputResults()
@@ -221,9 +217,9 @@ while True:
         plot()
     elif choice == 'remove' or choice.lower() == 'r':
         outputResults(halt = False)
-        removal = int(input('Which index to remove: '))
+        removal = int(input('\nWhich index to remove: '))
         del valuesList[removal]
-        calc = False
+        isCalculated = False
         outputResults()
     elif choice == 'clear' or choice.lower() == 'a':
-        valuesList, netforceList, calc = resetAllValues()
+        valuesList, netforceList, isCalculated = resetAllValues()
