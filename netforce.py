@@ -148,6 +148,9 @@ def outputResults(halt = True):
         input('\nPress Enter to continue...')
 
 def plot():
+    if not isCalculated:
+        print("\nYou need to run 'calc' first!")
+        return
     for i in range(len(valuesList)):
         plt.plot([0, round(valuesList[i][Fx], 3)],\
                 [0, round(valuesList[i][Fy], 3)],\
