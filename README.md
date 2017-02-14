@@ -1,8 +1,8 @@
 # netforce.py
 
 ## What it is
-netforce.py is a python script that calculates the net force in a planar central
-force system.
+netforce.py is a python script that calculates the resultant in a coplanar force
+system.
 
 ## What you can do
 - enter forces with an angle
