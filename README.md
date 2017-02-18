@@ -1,7 +1,7 @@
-# netforce.py
+# resultant.py
 
 ## What it is
-netforce.py is a python script that calculates the resultant in a coplanar force
+resultant.py is a python script that calculates the resultant in a coplanar force
 system.
 
 ## What you can do
@@ -12,7 +12,7 @@ system.
 
 
 ## What it needs
-netforce.py uses the following imports:
+resultant.py uses the following imports:
 - sys
 - os
 - re

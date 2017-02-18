@@ -180,6 +180,7 @@ valuesList = [[15.8, 82, math.radians(82)], [23.4, 175, math.radians(175)], [12.
 # For testing only, don't ship
 
 while True:
+    # refactor: Why variable menutext?
     menutext = ("\nEnter one of the following:\n"
                 "(Letters in parentheses are shortcuts to commands)\n"
                 "\n"
