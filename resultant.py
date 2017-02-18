@@ -75,13 +75,11 @@ def getInput(count):
                 # convert degrees to radians
                 userInput.append(math.radians(float(userInput[degrees])))
 
-                print(userInput) # debug
                 values.append(userInput)
                 break
 
             print("You're doing it wrong!")
             continue
-    print(values) # debug
     return values
 
 
