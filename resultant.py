@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# calculate net force
+# calculate resultant
 
 # Todo:
 # remove multiple values
@@ -17,9 +17,9 @@ import matplotlib.pyplot as plt
 COLOROPTIONS = ['b-', 'g-', 'c-', 'm-', 'y-', 'k-', 'w-']
 
 # All values are stored as a list of lists (valuesList).
-# Everything related to Fr goes to its own list (netforceList).
+# Everything related to Fr goes to its own list (resultantList).
 # The valuesList has the format: F, degrees, radians, Fx, Fy
-# The netforceList has the format: Fr, Frx, Fry, netRadians, netDegrees
+# The resultantList has the format: Fr, Frx, Fry, netRadians, netDegrees
 
 # Asign names to list indices
 F = 0
@@ -36,9 +36,9 @@ netDegrees = 4
 
 def resetAllValues():
     valuesList = []
-    netforceList = []
+    resultantList = []
     isCalculated = False
-    return valuesList, netforceList, isCalculated
+    return valuesList, resultantList, isCalculated
 
 
 
@@ -94,20 +94,20 @@ def calculate(Force, radians):
     print(values)
     return values
 
-def getNetForce():
-    netforce = [0, 0, 0, 0, 0]
+def getResultant():
+    resultant = [0, 0, 0, 0, 0]
     for i in range(len(valuesList)):
 
         # sum
         print(valuesList[i])
-        netforce[Frx] += valuesList[i][Fx]
-        netforce[Fry] += valuesList[i][Fy]
+        resultant[Frx] += valuesList[i][Fx]
+        resultant[Fry] += valuesList[i][Fy]
 
-    netforce[Fr] = math.sqrt(netforce[Frx] ** 2 + netforce[Fry] ** 2)
-    netforce[netRadians] = math.atan2(netforce[Fry], netforce[Frx])
-    netforce[netDegrees] = math.degrees(netforce[netRadians])
+    resultant[Fr] = math.sqrt(resultant[Frx] ** 2 + resultant[Fry] ** 2)
+    resultant[netRadians] = math.atan2(resultant[Fry], resultant[Frx])
+    resultant[netDegrees] = math.degrees(resultant[netRadians])
 
-    return netforce
+    return resultant
 
 
 def outputResults(halt = True):
@@ -141,12 +141,12 @@ def outputResults(halt = True):
 
     if isCalculated:
             print('\n')
-            print('net force:\t\t%8.3f' % netforceList[Fr])
-            print('radians:\t\t%8.3f' % netforceList[netRadians])
-            print('degrees:\t\t%8.3f' % netforceList[netDegrees])
+            print('resultant:\t\t%8.3f' % resultantList[Fr])
+            print('radians:\t\t%8.3f' % resultantList[netRadians])
+            print('degrees:\t\t%8.3f' % resultantList[netDegrees])
 
     else:
-        print("\nYou need to run 'calc' to see the net force and all Fx and Fy!")
+        print("\nYou need to run 'calc' to see the resultant and all Fx and Fy!")
 
     if halt:
         input('\nPress Enter to continue...')
@@ -160,8 +160,8 @@ def plot():
                 [0, round(valuesList[i][Fy], 3)],\
                 COLOROPTIONS[i], label='F[%s]' % str(i+1))
 
-    plt.plot([0, round(netforceList[Frx], 3)],\
-            [0, round(netforceList[Fry], 3)],\
+    plt.plot([0, round(resultantList[Frx], 3)],\
+            [0, round(resultantList[Fry], 3)],\
             'r-', label='Fr')
     plt.axis('equal')
     plt.grid()
@@ -170,10 +170,10 @@ def plot():
 
 
 
-print('Calculate the net force')
+print('Calculate the resultant')
 
 # Populate all Variables
-valuesList, netforceList, isCalculated = resetAllValues()
+valuesList, resultantList, isCalculated = resetAllValues()
 
 # For testing only, don't ship
 valuesList = [[15.8, 82, math.radians(82)], [23.4, 175, math.radians(175)], [12.5, 270, math.radians(270)], [28.75, 340, math.radians(340)]]
@@ -185,7 +185,7 @@ while True:
                 "(Letters in parentheses are shortcuts to commands)\n"
                 "\n"
                 "A number     to add that many forces\n"
-                "'(c)alc'     to calculate the net force\n"
+                "'(c)alc'     to calculate the resultant\n"
                 "'(p)rint'    to print\n"
                 "'pl(o)t'     to plot all forces\n"
                 "'(r)emove'   to remove one pair of values\n"
@@ -216,7 +216,7 @@ while True:
             if len(valuesList[i]) == 3:
                 valuesList[i].extend(calculate(valuesList[i][F],\
                         valuesList[i][radians]))
-        netforceList = getNetForce()
+        resultantList = getResultant()
         isCalculated = True
         outputResults()
     elif choice == 'print' or choice.lower() == 'p':
@@ -230,4 +230,4 @@ while True:
         isCalculated = False
         outputResults()
     elif choice == 'clear' or choice.lower() == 'a':
-        valuesList, netforceList, isCalculated = resetAllValues()
+        valuesList, resultantList, isCalculated = resetAllValues()
