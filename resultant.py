@@ -73,7 +73,7 @@ def getInput(count):
                 userInput = [float(element) for element in userInput]
 
                 # convert degrees to radians
-                userInput.append(math.radians(float(userInput[degrees])))
+                userInput.append(math.radians(userInput[degrees]))
 
                 values.append(userInput)
                 break
@@ -83,21 +83,17 @@ def getInput(count):
     return values
 
 
-def calculate(Force, radians):
-    print('Inside calculate')
-    print(Force)
-
+def resolveForce(Force, radians):
     values = [float(Force) * math.cos(radians), (float(Force) * math.sin(radians))]
 
-    print(values)
     return values
+
 
 def getResultant():
     resultant = [0, 0, 0, 0, 0]
     for i in range(len(valuesList)):
 
         # sum
-        print(valuesList[i])
         resultant[Frx] += valuesList[i][Fx]
         resultant[Fry] += valuesList[i][Fy]
 
@@ -212,7 +208,7 @@ while True:
     elif choice == 'calc' or choice.lower() == 'c':
         for i in range(len(valuesList)):
             if len(valuesList[i]) == 3:
-                valuesList[i].extend(calculate(valuesList[i][F],\
+                valuesList[i].extend(resolveForce(valuesList[i][F],\
                         valuesList[i][radians]))
         resultantList = getResultant()
         isCalculated = True
