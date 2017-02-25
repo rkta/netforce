@@ -218,8 +218,7 @@ def getInput(count):
 
 
 def resolveForce(Force, radians):
-    # Todo: float is dupe?
-    values = [float(Force) * math.cos(radians), (float(Force) * math.sin(radians))]
+    values = [Force * math.cos(radians), (Force * math.sin(radians))]
 
     return values
 
@@ -381,13 +380,17 @@ while True:
         valuesList.extend(getInput(choice))
         isCalculated = False
     elif choice == 'calc' or choice.lower() == 'c':
-        for i in range(len(valuesList)):
-            if len(valuesList[i]) == 5:
-                valuesList[i].extend(resolveForce(valuesList[i][F],\
-                        valuesList[i][radians]))
-        resultantList = getResultant()
-        isCalculated = True
-        outputResults()
+        if not valuesList:
+            print('\nYou need to enter something!')
+            input('\nPress Enter to continue...')
+        else:
+            for i in range(len(valuesList)):
+                if len(valuesList[i]) == 5:
+                    valuesList[i].extend(resolveForce(valuesList[i][F],\
+                            valuesList[i][radians]))
+            resultantList = getResultant()
+            isCalculated = True
+            outputResults()
     elif choice == 'print' or choice.lower() == 'p':
         outputResults()
     elif choice == 'plot' or choice.lower() == 'o':
