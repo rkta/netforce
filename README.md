@@ -5,7 +5,7 @@ resultant.py is a python script that calculates the resultant in a coplanar forc
 system.
 
 ## What you can do
-- enter forces with an angle
+- enter forces with an angle and coordinates
 - remove force angle pairs
 - print a table with all forces
 - plot the force system
