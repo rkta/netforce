@@ -4,7 +4,7 @@
 # Todo:
 # remove multiple values
 #   - create function
-#   - user enters indices separeted by space
+#   - user enters indices separated by space
 #   - split list, check if .isdigit()
 #   - remove indices
 
@@ -143,21 +143,25 @@ COLOROPTIONS = [
 
 # All values are stored as a list of lists (valuesList).
 # Everything related to Fr goes to its own list (resultantList).
-# The valuesList has the format: F, degrees, radians, Fx, Fy
+# The valuesList has the format: F, degrees, x, y, radians, Fx, Fy
 # The resultantList has the format: Fr, Frx, Fry, netRadians, netDegrees
 
-# Asign names to list indices
+# Assign names to list indices
 F = 0
 degrees = 1
-radians = 2
-Fx = 3
-Fy = 4
+x = 2
+y = 3
+radians = 4
+Fx = 5
+Fy = 6
 
 Fr = 0
-Frx = 1
-Fry = 2
-netRadians = 3
-netDegrees = 4
+netDegrees = 1
+x = 2
+y = 3
+netRadians = 4
+Frx = 5
+Fry = 6
 
 def resetAllValues():
     valuesList = []
@@ -180,9 +184,13 @@ def getInput(count):
     Input force and angle separated by a space.
     Forces must have all the same unit.
     Angle has to be degrees.
+    If the force system is non-concurrent and non-parallel enter the x and y
+    coordinates after the angle.
 
     Example:
     500 90
+    Example with coordinates:
+    500 90 10 -15
     """)
 
     values = []
@@ -192,9 +200,10 @@ def getInput(count):
             # ^(?=.) matches a ^ that is followed by a .
             # without making the . part of the match.
             # It is needed to not match an empty string.
-            if re.match(r'^(?=.)([+-])?\d*(\.\d+)? (?=.)([+-])?\d*(\.\d+)?$',\
-                    userInput) is not None:
+            if re.match(r'^(?=.)([+-])?\d*(\.\d+)? (?=.)([+-])?\d*(\.\d+)?( (?=.)([+-])?\d*(\.\d+)? (?=.)([+-])?\d*(\.\d+)?)?$', userInput) is not None:
                 userInput = userInput.split(' ')
+                if len(userInput) == 2:
+                    userInput.extend([0,0])
                 userInput = [float(element) for element in userInput]
 
                 # convert degrees to radians
@@ -209,13 +218,14 @@ def getInput(count):
 
 
 def resolveForce(Force, radians):
+    # Todo: float is dupe?
     values = [float(Force) * math.cos(radians), (float(Force) * math.sin(radians))]
 
     return values
 
 
 def getResultant():
-    resultant = [0, 0, 0, 0, 0]
+    resultant = [0] * 7
     for i in range(len(valuesList)):
         # sum
         resultant[Frx] += valuesList[i][Fx]
@@ -225,7 +235,30 @@ def getResultant():
     resultant[netRadians] = math.atan2(resultant[Fry], resultant[Frx])
     resultant[netDegrees] = math.degrees(resultant[netRadians])
 
+    resultant[x], resultant[y] = \
+            getCoordinatesOfResultant(resultant[Fr], resultant[netRadians])
+
     return resultant
+
+def getCoordinatesOfResultant(resultant, angelOfResultant):
+    Mx = 0
+    My = 0
+    for i in range(len(valuesList)):
+        Mx += valuesList[i][Fx] * valuesList[i][x]
+        My += valuesList[i][Fy] * valuesList[i][y]
+
+    # r is the distance from the origin of ordinates to the point of origin of
+    # the resultant
+    r = (Mx - My) / resultant
+
+    slopeResultant = math.tan(angelOfResultant)
+
+    slope_r = -(1/slopeResultant)
+
+    x_of_resultant = math.sqrt(r ** 2 / ( 1 + slope_r ** 2))
+    y_of_resultant = math.sqrt(r ** 2 - x_of_resultant ** 2)
+
+    return x_of_resultant, y_of_resultant
 
 
 def outputResults(halt = True):
@@ -237,23 +270,30 @@ def outputResults(halt = True):
         input('\nPress Enter to continue...')
         return None
 
-    print('\ni\t   F\t        Angle\t   Fx\t\t   Fy')
+    print('\ni\t   F\t        Angle\t   Fx\t\t   Fy\t\t x\t\t y')
     print('-' * 70)
     for i in range(len(valuesList)):
-        if len(valuesList[i]) == 5:
-            print(('%d\t%8.3f\t%3.2f\t%8.3f\t%8.3f'
+        if len(valuesList[i]) == 7:
+            print(('%d\t%8.3f\t%3.2f\t%8.3f\t%8.3f\t%8.2f\t%8.2f'
                     % (i,
                        float(valuesList[i][F]),
                        float(valuesList[i][degrees]),
                        round(valuesList[i][Fx], 3),
-                       round(valuesList[i][Fy], 3)))
+                       round(valuesList[i][Fy], 3),
+                       valuesList[i][x],
+                       valuesList[i][y]))
                  )
 
         else:
-            print(('%d\t%8.3f\t%3.2f'
+            #print(('%d\t%8.3f\t%3.2f'
+            print(('%d\t%8.3f\t%3.2f\t%s\t%s\t%8.2f\t%8.2f'
                     % (i,
                         float(valuesList[i][F]),
-                        float(valuesList[i][degrees])))
+                        float(valuesList[i][degrees]),
+                        ' - ',
+                        ' - ',
+                        valuesList[i][x],
+                        valuesList[i][y]))
                  )
 
     if isCalculated:
@@ -261,6 +301,8 @@ def outputResults(halt = True):
             print('resultant:\t\t%8.3f' % resultantList[Fr])
             print('radians:\t\t%8.3f' % resultantList[netRadians])
             print('degrees:\t\t%8.3f' % resultantList[netDegrees])
+            print('x coordinates:\t\t%8.3f' % resultantList[x])
+            print('y coordinates:\t\t%8.3f' % resultantList[y])
 
     else:
         print("\nYou need to run 'calc' to see the resultant and all Fx and Fy!")
@@ -278,8 +320,8 @@ def plot():
         else:
             color = i - len(COLOROPTIONS)
 
-        plt.plot([0, round(valuesList[i][Fx], 3)],\
-                [0, round(valuesList[i][Fy], 3)],\
+        plt.plot([valuesList[i][x], round(valuesList[i][Fx], 3) + valuesList[i][x]],\
+                [valuesList[i][y], round(valuesList[i][Fy], 3) + valuesList[i][y]],\
                 COLOROPTIONS[color], label='F[%s]' % str(i+1))
 
     plt.plot([0, round(resultantList[Frx], 3)],\
@@ -298,11 +340,12 @@ print('Calculate the resultant')
 valuesList, resultantList, isCalculated = resetAllValues()
 
 # For testing only, don't ship
-#valuesList = [[15.8, 82, math.radians(82)], [23.4, 175, math.radians(175)], [12.5, 270, math.radians(270)], [28.75, 340, math.radians(340)]]
-valuesList = []
+#valuesList = [[15.8, 82, 0, 0, math.radians(82)], [23.4, 175, 0, 0, math.radians(175)], [12.5, 270, 0, 0, math.radians(270)], [28.75, 340, 0, 0, math.radians(340)]]
+#valuesList = [[810, 220, 3.5, 4, math.radians(220)], [1050, 265, 7.2, 5.5, math.radians(265)], [560, 282, 8, 2.5, math.radians(282)], [700, 345, 10.5, 3, math.radians(345)]]
+#valuesList = []
 #for i in range(len(COLOROPTIONS)):
-for i in range(21):
-    valuesList.append([10, 10 * i, math.radians(10 * i)])
+#for i in range(21):
+#    valuesList.append([10, 10 * i, math.radians(10 * i)])
 # For testing only, don't ship
 
 while True:
@@ -339,7 +382,7 @@ while True:
         isCalculated = False
     elif choice == 'calc' or choice.lower() == 'c':
         for i in range(len(valuesList)):
-            if len(valuesList[i]) == 3:
+            if len(valuesList[i]) == 5:
                 valuesList[i].extend(resolveForce(valuesList[i][F],\
                         valuesList[i][radians]))
         resultantList = getResultant()
