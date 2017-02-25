@@ -144,9 +144,10 @@ COLOROPTIONS = [
 # All values are stored as a list of lists (valuesList).
 # Everything related to Fr goes to its own list (resultantList).
 # The valuesList has the format: F, degrees, x, y, radians, Fx, Fy
-# The resultantList has the format: Fr, Frx, Fry, netRadians, netDegrees
+# The resultantList has the format: Fr, Frx, Fry, resRadians, resDegrees
 
 # Assign names to list indices
+# valuesList
 F = 0
 degrees = 1
 x = 2
@@ -155,11 +156,12 @@ radians = 4
 Fx = 5
 Fy = 6
 
+# resultantList
 Fr = 0
-netDegrees = 1
-x = 2
-y = 3
-netRadians = 4
+resDegrees = 1
+#x = 2          same values as for valuesList
+#y = 3          same values as for valuesList
+resRadians = 4
 Frx = 5
 Fry = 6
 
@@ -231,11 +233,11 @@ def getResultant():
         resultant[Fry] += valuesList[i][Fy]
 
     resultant[Fr] = math.sqrt(resultant[Frx] ** 2 + resultant[Fry] ** 2)
-    resultant[netRadians] = math.atan2(resultant[Fry], resultant[Frx])
-    resultant[netDegrees] = math.degrees(resultant[netRadians])
+    resultant[resRadians] = math.atan2(resultant[Fry], resultant[Frx])
+    resultant[resDegrees] = math.degrees(resultant[resRadians])
 
     resultant[x], resultant[y] = \
-            getCoordinatesOfResultant(resultant[Fr], resultant[netRadians])
+            getCoordinatesOfResultant(resultant[Fr], resultant[resRadians])
 
     return resultant
 
@@ -298,8 +300,8 @@ def outputResults(halt = True):
     if isCalculated:
             print('\n')
             print('resultant:\t\t%8.3f' % resultantList[Fr])
-            print('radians:\t\t%8.3f' % resultantList[netRadians])
-            print('degrees:\t\t%8.3f' % resultantList[netDegrees])
+            print('radians:\t\t%8.3f' % resultantList[resRadians])
+            print('degrees:\t\t%8.3f' % resultantList[resDegrees])
             print('x coordinates:\t\t%8.3f' % resultantList[x])
             print('y coordinates:\t\t%8.3f' % resultantList[y])
 
