@@ -297,18 +297,18 @@ def outputResults(halt = True):
                         valuesList[i][y]))
                  )
 
-    if isCalculated:
-            print('\n')
-            print('resultant:\t\t%8.3f' % resultantList[Fr])
-            print('radians:\t\t%8.3f' % resultantList[resRadians])
-            print('degrees:\t\t%8.3f' % resultantList[resDegrees])
-            print('x coordinates:\t\t%8.3f' % resultantList[x])
-            print('y coordinates:\t\t%8.3f' % resultantList[y])
-
-    else:
-        print("\nYou need to run 'calc' to see the resultant and all Fx and Fy!")
-
     if halt:
+        if isCalculated:
+                print('\n')
+                print('resultant:\t\t%8.3f' % resultantList[Fr])
+                print('radians:\t\t%8.3f' % resultantList[resRadians])
+                print('degrees:\t\t%8.3f' % resultantList[resDegrees])
+                print('x coordinates:\t\t%8.3f' % resultantList[x])
+                print('y coordinates:\t\t%8.3f' % resultantList[y])
+
+        else:
+            print("\nYou need to run 'calc' to see the resultant and all Fx and Fy!")
+
         input('\nPress Enter to continue...')
 
 def plot():
@@ -334,6 +334,36 @@ def plot():
     plt.show()
 
 
+def removeValues():
+    global valuesList
+    outputResults(halt = False)
+    print("""\n
+    Input indices separated by a space.
+    Press enter to do nothing.
+    """)
+    while True:
+
+        removal = input('\nWhich indices to remove: ')
+        if not removal:
+            return
+        elif re.match(r'^\d+( \d+)*$', removal) is not None:
+            print(removal)
+            removal = removal.split(' ')
+            removal = [int(element) for element in removal]
+
+            for index in removal:
+                if index <= len(valuesList) - 1:
+                    del valuesList[index]
+                else:
+                    print('List index out of range: %s' % index)
+                    input('Press enter to continue')
+            isCalculated = False
+            outputResults()
+            break
+
+        print("You're doing it wrong!")
+        continue
+
 
 print('Calculate the resultant')
 
@@ -343,10 +373,10 @@ resetAllValues()
 # For testing only, don't ship
 #valuesList = [[15.8, 82, 0, 0, math.radians(82)], [23.4, 175, 0, 0, math.radians(175)], [12.5, 270, 0, 0, math.radians(270)], [28.75, 340, 0, 0, math.radians(340)]]
 #valuesList = [[810, 220, 3.5, 4, math.radians(220)], [1050, 265, 7.2, 5.5, math.radians(265)], [560, 282, 8, 2.5, math.radians(282)], [700, 345, 10.5, 3, math.radians(345)]]
-#valuesList = []
+valuesList = []
 #for i in range(len(COLOROPTIONS)):
 #for i in range(21):
-#    valuesList.append([10, 10 * i, math.radians(10 * i)])
+    #valuesList.append([10, 10 * i, 0, 0, math.radians(10 * i)])
 # For testing only, don't ship
 
 while True:
@@ -396,10 +426,6 @@ while True:
     elif choice == 'plot' or choice.lower() == 'o':
         plot()
     elif choice == 'remove' or choice.lower() == 'r':
-        outputResults(halt = False)
-        removal = int(input('\nWhich index to remove: '))
-        del valuesList[removal]
-        isCalculated = False
-        outputResults()
+        removeValues()
     elif choice == 'clear' or choice.lower() == 'a':
         resetAllValues()
