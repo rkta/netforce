@@ -166,11 +166,13 @@ Frx = 5
 Fry = 6
 
 def resetAllValues():
+    global valuesList
+    global resultantList
+    global isCalculated
+
     valuesList = []
     resultantList = []
     isCalculated = False
-    return valuesList, resultantList, isCalculated
-
 
 
 def waitingfornothing():
@@ -196,7 +198,7 @@ def getInput(count):
     """)
 
     values = []
-    for i in range(0, int(count)):
+    for i in range(int(count)):
         while True:
             userInput = input('%d: ' % i)
             # ^(?=.) matches a ^ that is followed by a .
@@ -227,10 +229,9 @@ def resolveForce(Force, radians):
 
 def getResultant():
     resultant = [0] * 7
-    for i in range(len(valuesList)):
-        # sum
-        resultant[Frx] += valuesList[i][Fx]
-        resultant[Fry] += valuesList[i][Fy]
+    for values in valuesList:
+        resultant[Frx] += values[Fx]
+        resultant[Fry] += values[Fy]
 
     resultant[Fr] = math.sqrt(resultant[Frx] ** 2 + resultant[Fry] ** 2)
     resultant[resRadians] = math.atan2(resultant[Fry], resultant[Frx])
@@ -244,9 +245,9 @@ def getResultant():
 def getCoordinatesOfResultant(resultant, angelOfResultant):
     Mx = 0
     My = 0
-    for i in range(len(valuesList)):
-        Mx += valuesList[i][Fx] * valuesList[i][x]
-        My += valuesList[i][Fy] * valuesList[i][y]
+    for values in valuesList:
+        Mx += values[Fx] * values[x]
+        My += values[Fy] * values[y]
 
     # r is the distance from the origin of ordinates to the point of origin of
     # the resultant
@@ -286,7 +287,6 @@ def outputResults(halt = True):
                  )
 
         else:
-            #print(('%d\t%8.3f\t%3.2f'
             print(('%d\t%8.3f\t%3.2f\t%s\t%s\t%8.2f\t%8.2f'
                     % (i,
                         float(valuesList[i][F]),
@@ -338,7 +338,7 @@ def plot():
 print('Calculate the resultant')
 
 # Populate all Variables
-valuesList, resultantList, isCalculated = resetAllValues()
+resetAllValues()
 
 # For testing only, don't ship
 #valuesList = [[15.8, 82, 0, 0, math.radians(82)], [23.4, 175, 0, 0, math.radians(175)], [12.5, 270, 0, 0, math.radians(270)], [28.75, 340, 0, 0, math.radians(340)]]
@@ -350,7 +350,6 @@ valuesList, resultantList, isCalculated = resetAllValues()
 # For testing only, don't ship
 
 while True:
-    # refactor: Why variable menutext?
     menutext = ("\nEnter one of the following:\n"
                 "(Letters in parentheses are shortcuts to commands)\n"
                 "\n"
@@ -386,10 +385,9 @@ while True:
             print('\nYou need to enter something!')
             input('\nPress Enter to continue...')
         else:
-            for i in range(len(valuesList)):
-                if len(valuesList[i]) == 5:
-                    valuesList[i].extend(resolveForce(valuesList[i][F],\
-                            valuesList[i][radians]))
+            for values in valuesList:
+                if len(values) == 5:
+                    values.extend(resolveForce(values[F], values[radians]))
             resultantList = getResultant()
             isCalculated = True
             outputResults()
@@ -404,4 +402,4 @@ while True:
         isCalculated = False
         outputResults()
     elif choice == 'clear' or choice.lower() == 'a':
-        valuesList, resultantList, isCalculated = resetAllValues()
+        resetAllValues()
