@@ -21,4 +21,4 @@ resultant.py uses the following imports:
 
 
 ## Why it exists
-I created it to learn python and to avoid using Excel in school.
+I created it to learn python and to avoid using Excel.
