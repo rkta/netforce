@@ -2,11 +2,7 @@
 # calculate resultant
 
 # Todo:
-# remove multiple values
-#   - create function
-#   - user enters indices separated by space
-#   - split list, check if .isdigit()
-#   - remove indices
+# enumerate instead of for i in ?
 
 import sys
 import os
