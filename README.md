@@ -25,4 +25,4 @@ I created it to learn python and to avoid using Excel.
 
 ## License
 
-This project is released under the WTFPL LICENSE.
+This project is released under the [WTFPL LICENSE](http://www.wtfpl.net/ "WTFPL LICENSE").
